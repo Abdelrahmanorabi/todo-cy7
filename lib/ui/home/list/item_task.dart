@@ -139,7 +139,7 @@ class _TaskItemState extends State<TaskItem> {
       posActionTitle: 'Yes',
       posAction: ()async{
         DialogUtils.showLoading(context, 'Loading...');
-        await MyDataBase.deleteTask(widget.task).timeout(const Duration(seconds: 2),
+        await MyDataBase.deleteTask(widget.task).timeout(const Duration(seconds: 1),
           onTimeout: () {
             DialogUtils.hideDialog(context);
             DialogUtils.showMessage(context,'Task deleted successfully',

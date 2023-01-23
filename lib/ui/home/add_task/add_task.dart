@@ -13,6 +13,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   var formKey = GlobalKey<FormState>();
   var titleController = TextEditingController();
   var descriptionController = TextEditingController();
+  DateTime selectedDateTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
 
   }
 
-  DateTime selectedDateTime = DateTime.now();
+
 
   void insertNewTask() async {
     if (formKey.currentState?.validate() == false) {
@@ -104,10 +105,9 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     DialogUtils.showLoading(context, 'Loading...');
 
 
-   // try {
 
      await  MyDataBase.insertTask(task)
-         .timeout( const Duration(seconds: 2),
+         .timeout( const Duration(seconds: 1),
          onTimeout: () {
            DialogUtils.hideDialog(context);
            DialogUtils.showMessage(context, 'task inserted successfully',
@@ -118,47 +118,23 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
          });
 
 
-     // DialogUtils.showMessage(context, 'task inserted successfully',
-        //  posActionTitle: 'Ok', posAction: () {
-       // Navigator.pop(context);
-     // }, dismissible: false);
-  //  }
-    // catch (error) {
-    //   DialogUtils.hideDialog(context);
-    //   DialogUtils.showMessage(
-    //       context,
-    //       'Something went wrong.'
-    //       'please try again',
-    //       posActionTitle: 'Try Again',
-    //       posAction: () {
-    //         insertNewTask();
-    //       },
-    //       negActionTitle: 'cancel',
-    //       negAction: () {
-    //         Navigator.pop(context);
-    //       });
-    // }
-    // .then((value){
-    //   // call when future is completed without errors
-    //   // show message
-    // })
-    // .onError((error, stackTrace){
-    //
-    // });
+
   }
 
   void showTaskDatePicker() async {
-    DateTime? userSelectedDate = await showDatePicker(
-        context: context,
-        initialDate: selectedDateTime,
-        firstDate: DateTime.now(),
-        lastDate: DateTime.now().add(Duration(days: 365)));
-    if (userSelectedDate == null) {
-      return;
+    DateTime? date = await showDatePicker(
+      context: context,
+      initialDate: selectedDateTime,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(
+        const Duration(days: 365),
+      ),
+    );
+
+    if (date != null) {
+      selectedDateTime = date;
+      setState(() {});
     }
-    setState(() {
-      selectedDateTime = userSelectedDate;
-    });
   }
 
 }

@@ -23,7 +23,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   void showDateDialog() async {
     DateTime? date = await showDatePicker(
       context: context,
-      initialDate:selectedDate ,   // widget.task.dateTime!
+      initialDate: widget.task.dateTime,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(
         const Duration(days: 365),
@@ -36,21 +36,10 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     }
   }
 
+
   void editTask() async {
     await MyDataBase.editTaskDetails(widget.task)
-    //     .then((value) {
-    //   DialogUtils.showMessage(context, 'Task Updated Successfully', posActionTitle: 'OK',
-    //       posAction: () {
-    //         Navigator.pop(context);
-    //       });
-    // })
-    //     .onError((error, stackTrace) {
-    //   DialogUtils.showMessage(context, 'Error happened please try again',
-    //       posActionTitle: 'OK', posAction: () {
-    //         Navigator.pop(context);
-    //       });
-    // })
-        .timeout(const Duration(seconds: 3), onTimeout: () {
+        .timeout(const Duration(seconds: 1), onTimeout: () {
       DialogUtils.showMessage(context, 'Task Updated Successfully', posActionTitle: 'OK',
           posAction: () {
             Navigator.pop(context);
@@ -158,7 +147,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                         IconButton(
                           onPressed: () {
                             showDateDialog();
-                            print('weaeae');
                           },
                           icon: const Icon(
                             Icons.calendar_month_sharp,
@@ -173,8 +161,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                     Row(
                       children: [
                         Text(
-                          DateFormat('yyyy-MM-dd').format(widget.task.dateTime!),
-                          // '${task.dateTime!.year} / ${task.dateTime!.month}/ ${task.dateTime!.day} ',
+                          DateFormat('yyyy-MM-dd').format(widget.task.dateTime),
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
