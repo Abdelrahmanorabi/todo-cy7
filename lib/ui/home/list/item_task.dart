@@ -104,15 +104,18 @@ class _TaskItemState extends State<TaskItem> {
       posActionTitle: 'Yes',
       posAction: ()async{
         DialogUtils.showLoading(context, 'Loading...');
-        await MyDataBase.deleteTask(widget.task);
-        DialogUtils.hideDialog(context);
-        DialogUtils.showMessage(context,'Task deleted successfully',
-            posActionTitle: 'OK',
-            negActionTitle: 'Undo',
-            negAction: (){
-              //undo delete   [again insert task in firebase]
-            }
-        );
+        await MyDataBase.deleteTask(widget.task).timeout(const Duration(seconds: 2),
+          onTimeout: () {
+            DialogUtils.hideDialog(context);
+            DialogUtils.showMessage(context,'Task deleted successfully',
+                posActionTitle: 'OK',
+                negActionTitle: 'Undo',
+                negAction: (){
+                  //undo delete   [again insert task in firebase]
+                }
+            );
+          });
+
       },
       negActionTitle: 'no',
 
