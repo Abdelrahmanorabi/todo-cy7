@@ -7,6 +7,7 @@ import 'package:todo_c7_sun/ui/theme/my_theme.dart';
 
 import '../../../database/my_database.dart';
 import '../../../utils/DialogUtils.dart';
+import 'edit.dart';
 
 class TaskItem extends StatefulWidget {
   Task task;
@@ -21,7 +22,16 @@ class _TaskItemState extends State<TaskItem> {
   Widget build(BuildContext context) {
     SettingProvider settingProvider = Provider.of(context);
 
-    return Container(
+    return  InkWell(
+        onTap: () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => EditTaskScreen(task: widget.task)));
+    },
+    child:
+
+      Container(
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       decoration: BoxDecoration(
           color: Colors.red, borderRadius: BorderRadius.circular(18)),
@@ -53,7 +63,7 @@ class _TaskItemState extends State<TaskItem> {
                 height: 80,
                 width: 8,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
+                    color: widget.task.isDone! ? Colors.green: MyTheme.lightPrimary,
                     borderRadius: BorderRadius.circular(12)),
               ),
               const SizedBox(
@@ -65,11 +75,18 @@ class _TaskItemState extends State<TaskItem> {
                 children: [
                   Text(
                     widget.task.title,
-                    style: Theme.of(context)
+                    style:  widget.task.isDone!
+                        ? Theme.of(context)
                         .textTheme
-                        .headline5
-                        ?.copyWith(color: Theme.of(context).primaryColor),
+                        .titleMedium!
+                        .copyWith(color: Colors.green)
+                        : Theme.of(context).textTheme.titleMedium,
                   ),
+                  //   Theme.of(context)
+                  //       .textTheme
+                  //       .headline5
+                  //       ?.copyWith(color: Theme.of(context).primaryColor),
+                  // ),
                   SizedBox(
                     height: 12,
                   ),
@@ -81,6 +98,23 @@ class _TaskItemState extends State<TaskItem> {
               SizedBox(
                 width: 8,
               ),
+
+
+
+          InkWell(
+            onTap: () {
+              MyDataBase.editIsDone(widget.task);
+            },
+            child: widget.task.isDone!
+                ? Text(
+              'Done!',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color:Colors.green,fontSize: 22,fontWeight: FontWeight.bold),
+            )
+
+                :
               Container(
                 padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 decoration: BoxDecoration(
@@ -91,12 +125,13 @@ class _TaskItemState extends State<TaskItem> {
                   size: 32,
                   color: Colors.white,
                 ),
-              )
+              ),
+          )
             ],
           ),
         ),
       ),
-    );
+    ));
   }
 
   void deleteTask(){
