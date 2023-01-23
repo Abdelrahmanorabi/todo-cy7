@@ -84,6 +84,8 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         ),
       ),
     );
+
+
   }
 
   DateTime selectedDateTime = DateTime.now();
@@ -96,30 +98,46 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         title: titleController.text,
         description: descriptionController.text,
         dateTime: selectedDateTime);
+
+
+
     DialogUtils.showLoading(context, 'Loading...');
 
-    try {
-      await MyDataBase.insertTask(task);
-      DialogUtils.hideDialog(context);
-      DialogUtils.showMessage(context, 'task inserted successfully',
-          posActionTitle: 'Ok', posAction: () {
-        Navigator.pop(context);
-      }, dismissible: false);
-    } catch (error) {
-      DialogUtils.hideDialog(context);
-      DialogUtils.showMessage(
-          context,
-          'Something went wrong.'
-          'please try again',
-          posActionTitle: 'Try Again',
-          posAction: () {
-            insertNewTask();
-          },
-          negActionTitle: 'cancel',
-          negAction: () {
-            Navigator.pop(context);
-          });
-    }
+
+   // try {
+
+     await  MyDataBase.insertTask(task)
+         .timeout( const Duration(seconds: 2),
+         onTimeout: () {
+           DialogUtils.hideDialog(context);
+           DialogUtils.showMessage(context, 'task inserted successfully',
+               posActionTitle: 'Ok', posAction: () {
+                 Navigator.pop(context);
+               }, dismissible: false);
+          
+         });
+
+
+     // DialogUtils.showMessage(context, 'task inserted successfully',
+        //  posActionTitle: 'Ok', posAction: () {
+       // Navigator.pop(context);
+     // }, dismissible: false);
+  //  }
+    // catch (error) {
+    //   DialogUtils.hideDialog(context);
+    //   DialogUtils.showMessage(
+    //       context,
+    //       'Something went wrong.'
+    //       'please try again',
+    //       posActionTitle: 'Try Again',
+    //       posAction: () {
+    //         insertNewTask();
+    //       },
+    //       negActionTitle: 'cancel',
+    //       negAction: () {
+    //         Navigator.pop(context);
+    //       });
+    // }
     // .then((value){
     //   // call when future is completed without errors
     //   // show message
@@ -142,4 +160,5 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
       selectedDateTime = userSelectedDate;
     });
   }
+
 }
